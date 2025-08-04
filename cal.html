@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Calculator</title>
+    <style>
+        body {
+            background-color: black;
+            font-family: Arial;
+            color: rgb(208, 19, 19);
+            text-align: center;
+            padding-top: 50px;
+        }
+
+        .calculator {
+            width: 300px;
+            margin: auto;
+            background-color: #222;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .display {
+            background-color: #333;
+            padding: 15px;
+            font-size: 30px;
+            text-align: right;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            color: rgb(197, 49, 49);
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            background-color: #444;
+            color: white;
+        }
+
+        button:hover {
+            background-color: #666;
+        }
+
+        .equals {
+            background-color: rgb(3, 175, 177);
+            color: white;
+            grid-column: span 2;
+        }
+
+        .clear {
+            background-color: red;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator">
+    <div id="display" class="display">0</div>
+    <div class="buttons">
+        <button onclick="clearAll()">AC</button>
+        <button onclick="deleteLast()">DEL</button>
+        <button onclick="pressOperator('/')">/</button>
+        <button onclick="pressOperator('*')">*</button>
+
+        <button onclick="pressNumber('7')">7</button>
+        <button onclick="pressNumber('8')">8</button>
+        <button onclick="pressNumber('9')">9</button>
+        <button onclick="pressOperator('-')">-</button>
+
+        <button onclick="pressNumber('4')">4</button>
+        <button onclick="pressNumber('5')">5</button>
+        <button onclick="pressNumber('6')">6</button>
+        <button onclick="pressOperator('+')">+</button>
+
+        <button onclick="pressNumber('1')">1</button>
+        <button onclick="pressNumber('2')">2</button>
+        <button onclick="pressNumber('3')">3</button>
+        <button class="equals" onclick="calculate()">=</button>
+
+        <button onclick="pressNumber('0')" style="grid-column: span 2;">0</button>
+        <button onclick="pressDot('.')">.</button>
+    </div>
+</div>
+
+<script>
+    let currentValue = "0";
+    let previousValue = "";
+    let operator = null;
+    let resetNext = false;
+
+    function updateDisplay() {
+        document.getElementById("display").textContent = currentValue;
+    }
+
+    function pressNumber(num) {
+        if (currentValue === "0" || resetNext) {
+            currentValue = num;
+            resetNext = false;
+        } else {
+            currentValue += num;
+        }
+        updateDisplay();
+    }
+
+    function pressDot() {
+        if (!currentValue.includes(".")) {
+            currentValue += ".";
+        }
+        updateDisplay();
+    }
+
+    function pressOperator(op) {
+        if (operator !== null) {
+            calculate();
+        }
+        previousValue = currentValue;
+        operator = op;
+        resetNext = true;
+    }
+
+    function calculate() {
+        let result = 0;
+        let a = parseFloat(previousValue);
+        let b = parseFloat(currentValue);
+
+        if (operator === "+") result = a + b;
+        else if (operator === "-") result = a - b;
+        else if (operator === "*") result = a * b;
+        else if (operator === "/") result = a / b;
+
+        currentValue = result.toString();
+        operator = null;
+        updateDisplay();
+    }
+
+    function clearAll() {
+        currentValue = "0";
+        previousValue = "";
+        operator = null;
+        updateDisplay();
+    }
+
+    function deleteLast() {
+        if (currentValue.length > 1) {
+            currentValue = currentValue.slice(0, -1);
+        } else {
+            currentValue = "0";
+        }
+        updateDisplay();
+    }
+</script>
+
+</body>
+</html>
